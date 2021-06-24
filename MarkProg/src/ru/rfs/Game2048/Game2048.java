@@ -4,14 +4,12 @@ import java.util.Random;
 
 public class Game2048 implements Game{
 
-    Board board;
+    public static final int GAME_SIZE = 4;
+
+    private final Board<Key, Integer> board = new SquareBoard<>(GAME_SIZE);
 
     GameHelper helper = new GameHelper();
     Random random = new Random();
-
-    public Game2048(Board b) {
-        this.board = b;
-    }
 
     @Override
     public void init() {

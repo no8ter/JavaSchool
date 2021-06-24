@@ -1,8 +1,5 @@
 package ru.rfs.Game2048;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static java.util.Arrays.asList;
 import static ru.rfs.Game2048.BoardTest.assertEquals;
 
