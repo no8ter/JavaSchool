@@ -1,11 +1,13 @@
 package ru.rfs.Game2048;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class Game2048 implements Game{
 
     public static final int GAME_SIZE = 4;
-
     private final Board<Key, Integer> board = new SquareBoard<>(GAME_SIZE);
 
     GameHelper helper = new GameHelper();
@@ -13,31 +15,125 @@ public class Game2048 implements Game{
 
     @Override
     public void init() {
-
+        int square = GAME_SIZE * GAME_SIZE;
+        List<Integer> rawBoard = new ArrayList<>(square);
+        for (int row = 0; row < square; row++) {
+            rawBoard.add(null);
+        }
+        this.board.fillBoard(rawBoard);
+        addItem();
+        addItem();
     }
 
     @Override
     public boolean canMove() {
-        return false;
+        return board.availableSpace().size() != 0;
     }
 
     @Override
     public boolean move(Direction direction) {
-        return false;
+//        System.out.println(direction == Direction.DOWN);
+        if (canMove()) {
+            List<Integer> afterMoveValues = new ArrayList<>();
+
+
+            if (direction == Direction.LEFT) {
+                for (int i = 0; i < GAME_SIZE; i++) {
+                    List<Key> row = board.getRow(i);
+                    afterMoveValues.addAll(helper.moveAndMergeEqual(board.getValues(row)));
+                }
+
+
+            } else if (direction == Direction.RIGHT) {
+
+
+
+            } else if (direction == Direction.DOWN) {
+                List<List<Integer>> columns = new ArrayList<>();
+                for (int i = 0; i < GAME_SIZE; i++) {
+                    List<Key> column = board.getColumn(i);
+                    List<Integer> values = board.getValues(column);
+                    Collections.reverse(values);
+                    List<Integer> merged = helper.moveAndMergeEqual(values);
+                    columns.add(merged);
+                }
+
+                for (int i = GAME_SIZE-1; i >= 0; i--) {
+                    for (int q = 0; q < GAME_SIZE; q++) {
+                        afterMoveValues.add(columns.get(q).get(i));
+                    }
+                }
+
+
+            } else if (direction == Direction.UP) {
+
+            }
+
+
+            if (!afterMoveValues.equals(getAllValues())) {
+                board.fillBoard(afterMoveValues);
+                addItem();
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
     public void addItem() {
-
+        List<Key> emptyCells = board.availableSpace();
+        int randId = random.nextInt(emptyCells.size());
+        board.addItem(emptyCells.get(randId), randomBlock());
     }
 
     @Override
-    public Board getGameBoard() {
-        return null;
+    public Board<Key, Integer> getGameBoard() {
+        return this.board;
     }
 
     @Override
     public boolean hasWin() {
-        return false;
+        return getAllValues().contains(2048);
+    }
+
+    /**
+     * Возвращает список значений всех полей на доске
+     * @return список полей
+     */
+    private List<Integer> getAllValues() {
+        List<Integer> ret = new ArrayList<>();
+        for (int i = 0; i < GAME_SIZE; i++) {
+            List<Key> row = board.getRow(i);
+            ret.addAll(board.getValues(row));
+        }
+        return ret;
+    }
+
+    /**
+     * Генерация случайного числа для блока по правилам игры 2048
+     * 90% - 2
+     * 10% - 4
+     * @return Integer 2 || 4
+     */
+    private Integer randomBlock() {
+        return (int) (Math.random() * 100) <= 10 ? 4 : 2 ;
+    }
+
+    /**
+     * Возвращает строку для вывода текущего состояния таблицы
+     * ТОЛЬКО ДЛЯ ОТЛАДКИ!
+     * @return отображение таблицы
+     */
+    private String printBoard() {
+        StringBuilder b = new StringBuilder();
+
+        for (int i = 0; i < GAME_SIZE; i++) {
+            List<Key> row = board.getRow(i);
+            b.append(board.getValues(row));
+            b.append('\n');
+        }
+
+        return b.toString();
     }
 }

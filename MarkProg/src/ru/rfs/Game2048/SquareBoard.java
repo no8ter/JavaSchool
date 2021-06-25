@@ -1,6 +1,7 @@
 package ru.rfs.Game2048;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SquareBoard<V> extends Board<Key, V> {
@@ -12,24 +13,26 @@ public class SquareBoard<V> extends Board<Key, V> {
         this.size = size;
     }
 
-    /**
+    /** REWORK!
      * Заполнить доску входными данными из списка
      *
      * @param list Список из Integer
      */
     @Override
     public void fillBoard(List<V> list) {
-        int row = 0;
-        int column = 0;
-        for (V value: list) {
-            Key key = new Key(row, column);
-            addItem(key, value);
-            column++;
-            if (column == this.size) {
-                row++;
-                column = 0;
+        for (int row = 0; row<size; row++) {
+            for (int column = 0; column<size; column++) {
+//                System.out.print(row);
+//                System.out.print(" ");
+//                System.out.print(column);
+//                System.out.print(" v:");
+//                System.out.println(list.get( (row*size)+column ));
+
+                Key key = new Key(row, column);
+                addItem(key, list.get((row*size)+column));
             }
         }
+//        System.out.println("===================");
     }
 
     /**
@@ -98,6 +101,7 @@ public class SquareBoard<V> extends Board<Key, V> {
                 ret.add(k);
             }
         }
+        Collections.sort(ret);
         return ret;
     }
 
@@ -116,6 +120,7 @@ public class SquareBoard<V> extends Board<Key, V> {
                 ret.add(k);
             }
         }
+        Collections.sort(ret);
         return ret;
     }
 

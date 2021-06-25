@@ -46,10 +46,12 @@ public class Key implements Comparable<Key>{
     public int compareTo(Key key) {
         if (key.getColumn() == this.getColumn() && key.getRow() == this.getRow()) {
             return 0;
-        } else if(key.getColumn() < this.getColumn() || key.getRow() < this.getRow()) {
-            return -1;
-        } else {
+        } else if (this.getRow() > key.getRow()) {
             return 1;
+        } else if (this.getRow() == key.getRow() && this.getColumn() > key.getColumn()) {
+            return 1;
+        } else {
+            return -1;
         }
     }
 }

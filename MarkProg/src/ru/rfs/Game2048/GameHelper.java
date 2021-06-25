@@ -1,16 +1,12 @@
 package ru.rfs.Game2048;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class GameHelper {
     public List<Integer> moveAndMergeEqual(List<Integer> list) {
-        List<Integer> ret = new ArrayList<>(list.size());
-
-        // Fill return list of nulls as default
-        for (int i = 0; i < list.size(); i++) {
-            ret.add(null);
-        }
+        List<Integer> ret = new ArrayList<>(Collections.nCopies(list.size(), null));
 
         int currentId = 0;
         for (int i = 0; i < list.size(); i++) {
