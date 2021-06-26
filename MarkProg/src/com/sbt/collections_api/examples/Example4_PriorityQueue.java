@@ -4,9 +4,7 @@ import com.sbt.collections_api.Person;
 import com.sbt.collections_api.PersonFirstLoad;
 import com.sbt.collections_api.Segment;
 
-import java.sql.Statement;
 import java.util.Comparator;
-import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 

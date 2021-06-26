@@ -3,7 +3,10 @@ package com.sbt.collections_api.examples;
 import com.sbt.collections_api.Person;
 import com.sbt.collections_api.PersonFirstLoad;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class Example9_Collections {
     public static void main(String[] args) {

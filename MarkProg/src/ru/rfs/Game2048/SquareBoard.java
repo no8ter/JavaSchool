@@ -8,31 +8,28 @@ public class SquareBoard<V> extends Board<Key, V> {
 
     private final int size;
 
-    public SquareBoard(int size) {
+    SquareBoard(int size) {
         super(size, size);
         this.size = size;
     }
 
-    /** REWORK!
+    /**
      * Заполнить доску входными данными из списка
      *
      * @param list Список из Integer
      */
     @Override
     public void fillBoard(List<V> list) {
+        if (list.size() > size*size) {
+            throw new RuntimeException("Ошибка инициализации");
+        }
+
         for (int row = 0; row<size; row++) {
             for (int column = 0; column<size; column++) {
-//                System.out.print(row);
-//                System.out.print(" ");
-//                System.out.print(column);
-//                System.out.print(" v:");
-//                System.out.println(list.get( (row*size)+column ));
-
                 Key key = new Key(row, column);
                 addItem(key, list.get((row*size)+column));
             }
         }
-//        System.out.println("===================");
     }
 
     /**

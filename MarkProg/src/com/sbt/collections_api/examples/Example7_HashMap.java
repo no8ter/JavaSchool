@@ -1,7 +1,6 @@
 package com.sbt.collections_api.examples;
 
 import com.sbt.collections_api.Person;
-import com.sbt.collections_api.PersonFirstLoad;
 
 import java.util.HashMap;
 import java.util.Map;

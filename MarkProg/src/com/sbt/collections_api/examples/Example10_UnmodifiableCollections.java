@@ -4,7 +4,10 @@ import com.sbt.collections_api.Person;
 import com.sbt.collections_api.PersonFirstLoad;
 import com.sbt.collections_api.Segment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class Example10_UnmodifiableCollections {
     public static void main(String[] args) {

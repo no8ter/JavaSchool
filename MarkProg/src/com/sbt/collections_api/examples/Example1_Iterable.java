@@ -1,9 +1,9 @@
 package com.sbt.collections_api.examples;
 
-import java.util.Iterator;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 
 /**
  * Этот класс предоставляет построчную итерацию по текстовому файлу.

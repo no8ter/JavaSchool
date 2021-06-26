@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="MarkProg:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/MarkProg_jar</output-path>
+    <root id="archive" name="MarkProg.jar">
+      <element id="module-output" name="MarkProg" />
+    </root>
+  </artifact>
+</component>

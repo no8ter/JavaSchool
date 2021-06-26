@@ -1,6 +1,8 @@
 package com.sbt.collections_api;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 // new Person(1L, "Байда Илья Вадимович", "79185551234", Segment.MASS)
 // new Person(2L, "Истамов Аскар Зохитович", "79185551219", Segment.MASS)

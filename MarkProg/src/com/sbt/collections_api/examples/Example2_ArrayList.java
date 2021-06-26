@@ -4,7 +4,9 @@ import com.sbt.collections_api.Person;
 import com.sbt.collections_api.PersonFirstLoad;
 import com.sbt.collections_api.Segment;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Example2_ArrayList {
     public static void main(String[] args) {

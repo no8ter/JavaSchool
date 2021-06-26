@@ -21,8 +21,12 @@ public class Game2048 implements Game{
             rawBoard.add(null);
         }
         this.board.fillBoard(rawBoard);
-        addItem();
-        addItem();
+        try {
+            addItem();
+            addItem();
+        } catch (NotEnoughSpace notEnoughSpace) {
+            notEnoughSpace.printStackTrace();
+        }
     }
 
     @Override
@@ -32,20 +36,23 @@ public class Game2048 implements Game{
 
     @Override
     public boolean move(Direction direction) {
-//        System.out.println(direction == Direction.DOWN);
         if (canMove()) {
             List<Integer> afterMoveValues = new ArrayList<>();
-
-
+            
             if (direction == Direction.LEFT) {
                 for (int i = 0; i < GAME_SIZE; i++) {
                     List<Key> row = board.getRow(i);
                     afterMoveValues.addAll(helper.moveAndMergeEqual(board.getValues(row)));
                 }
-
-
             } else if (direction == Direction.RIGHT) {
-
+                for (int i = 0; i < GAME_SIZE; i++) {
+                    List<Key> row = board.getRow(i);
+                    List<Integer> values = board.getValues(row);
+                    Collections.reverse(values);
+                    values = helper.moveAndMergeEqual(values);
+                    Collections.reverse(values);
+                    afterMoveValues.addAll(values);
+                }
 
 
             } else if (direction == Direction.DOWN) {
@@ -66,13 +73,30 @@ public class Game2048 implements Game{
 
 
             } else if (direction == Direction.UP) {
+                List<List<Integer>> columns = new ArrayList<>();
+                for (int i = 0; i < GAME_SIZE; i++) {
+                    List<Key> column = board.getColumn(i);
+                    List<Integer> values = board.getValues(column);
+//                    Collections.reverse(values);
+                    List<Integer> merged = helper.moveAndMergeEqual(values);
+                    columns.add(merged);
+                }
 
+                for (int i = 0; i < GAME_SIZE; i++) {
+                    for (int q = 0; q < GAME_SIZE; q++) {
+                        afterMoveValues.add(columns.get(q).get(i));
+                    }
+                }
             }
 
 
             if (!afterMoveValues.equals(getAllValues())) {
                 board.fillBoard(afterMoveValues);
-                addItem();
+                try {
+                    addItem();
+                } catch (NotEnoughSpace notEnoughSpace) {
+                    notEnoughSpace.printStackTrace();
+                }
             }
             return true;
         } else {
@@ -81,8 +105,11 @@ public class Game2048 implements Game{
     }
 
     @Override
-    public void addItem() {
+    public void addItem() throws NotEnoughSpace {
         List<Key> emptyCells = board.availableSpace();
+        if (emptyCells.size() == 0) {
+            throw new NotEnoughSpace("Некуда добавлять новое число");
+        }
         int randId = random.nextInt(emptyCells.size());
         board.addItem(emptyCells.get(randId), randomBlock());
     }
