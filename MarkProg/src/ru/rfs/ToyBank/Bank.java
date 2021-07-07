@@ -1,36 +1,29 @@
 package ru.rfs.ToyBank;
 
 public class Bank {
-    private volatile int balance;
+    private volatile int balance = 0;
 
-    public Bank() {
-        this.balance = 0;
+    public synchronized int getBalance() {
+        return balance;
     }
 
-    private synchronized void addMoney(int count){
-        balance = balance + count;
-    }
-
-    private synchronized void popMoney(int count){
-        balance = balance - count;
-    }
-
-    public synchronized void doTransact(Task task, String managerName){
-        boolean ans = false;
-        if (task.task == Operations.REPAYMENT) {
-            ans = true;
-            addMoney(task.moneyCount);
+    // Storing money into the bank
+    public synchronized void depositMoney(int count) {
+        if (count >= 0) {
+            balance = balance + count;
+            System.out.println("Бек система: Заявка"+ Operations.REPAYMENT+" "+count+" ВЫПОЛНЕНА. Баланс банка: "+getBalance());
         } else {
-            if (balance >= task.moneyCount) {
-                ans = true;
-                popMoney(task.moneyCount);
-            }
+            System.out.println("Бек система: Заявка"+ Operations.REPAYMENT+" "+count+" НЕ ВЫПОЛНЕНА. Введена отрицательная сумма. Баланс банка: "+getBalance());
         }
+    }
 
-        if (ans) {
-            System.out.println("Бэк система: Заявка"+task+"УСПЕШНО ВЫПОЛНЕНА. Получена от "+managerName+". Баланс банка: "+balance);
+    // Restoring money into the bank
+    public synchronized void restoreMoney(int count) {
+        if (count <= balance) {
+            balance = balance - count;
+            System.out.println("Бек система: Заявка"+ Operations.CREDIT+" "+count+" ВЫПОЛНЕНА. Баланс банка: "+getBalance());
         } else {
-            System.out.println("Бэк система: Заявка"+task+"НЕ ВЫПОЛНЕНА. Получена от "+managerName+". Сумма больше баланса. Баланс банка: "+balance);
+            System.out.println("Бек система: Заявка"+ Operations.CREDIT+" "+count+" НЕ ВЫПОЛНЕНА. Недостаточно средств в банке. Баланс банка: "+getBalance());
         }
     }
 }

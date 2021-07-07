@@ -1,33 +1,62 @@
 package ru.rfs.ToyBank;
 
 public class Main {
-    public static void main(String[] args) {
 
-        System.out.println("---------------------------------Toy Bank---------------------------------");
 
+    public static void main(String[] args) throws InterruptedException {
+
+
+        // Initialization block
+        System.out.println("--------------------------------------Toy bank--------------------------------------");
         Bank bank = new Bank();
         FrontSystem fs = new FrontSystem();
 
-        TaskManager tm1 = new TaskManager(fs, bank);
-        TaskManager tm2 = new TaskManager(fs, bank);
+        // Initialize task managers
+        Thread tm1 = new Thread(new TaskManager(bank, fs));
+        Thread tm2 = new Thread(new TaskManager(bank, fs));
+        tm1.setDaemon(true);
+        tm2.setDaemon(true);
+        tm1.setName("Обработчик заявок 1");
+        tm2.setName("Обработчик заявок 2");
 
-        tm1.start();
-        tm2.start();
+        // Initialize clients
+        Thread client1 = new Thread(new Client(new Task(1000, Operations.REPAYMENT), fs));
+        Thread client2 = new Thread(new Client(new Task(1000, Operations.CREDIT), fs));
+        Thread client3 = new Thread(new Client(new Task(2000, Operations.REPAYMENT), fs));
+        Thread client4 = new Thread(new Client(new Task(2000, Operations.CREDIT), fs));
+        client1.setName("Клиент 1");
+        client2.setName("Клиент 2");
+        client3.setName("Клиент 3");
+        client4.setName("Клиент 4");
+        // End Initialization block
 
-        ClientThread client1 = new ClientThread(new Task("1", 5000, Operations.CREDIT), fs);
-        ClientThread client2 = new ClientThread(new Task("1", 10000, Operations.REPAYMENT), fs);
-        ClientThread client3 = new ClientThread(new Task("1", 15000, Operations.CREDIT), fs);
-        ClientThread client4 = new ClientThread(new Task("1", 20000, Operations.REPAYMENT), fs);
-        ClientThread client5 = new ClientThread(new Task("1", 25000, Operations.CREDIT), fs);
 
+
+        // Startup block
         client1.start();
         client2.start();
         client3.start();
         client4.start();
-        client5.start();
+        tm1.start();
+        tm2.start();
 
-        if (client1.isAlive() == false && client2.isAlive() == false && client3.isAlive() == false && client4.isAlive() == false && client5.isAlive() == false) {
-            System.exit(-5);
+        client1.join();
+        client2.join();
+        client3.join();
+        client4.join();
+        // End startup block
+
+
+
+        // Alive check
+        while (true) {
+            if (fs.getQueueSize() <=0) {
+                System.out.println("<<All's gone>>");
+                System.exit(0);
+            } else {
+                System.out.println("<<Still alive>>");
+                Thread.sleep(100L);
+            }
         }
     }
 }

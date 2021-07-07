@@ -5,8 +5,8 @@ public class Task {
     int moneyCount;
     Operations task;
 
-    public Task(String threadName, int moneyCount, Operations task) {
-        this.threadName = threadName;
+    public Task(int moneyCount, Operations task) {
+        this.threadName = "";
         this.moneyCount = moneyCount;
         this.task = task;
     }

@@ -1,34 +1,28 @@
 package ru.rfs.ToyBank;
 
 import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.Queue;
 
 public class FrontSystem {
 
-    private volatile Deque<Task> deque = new ArrayDeque<>();
-    public boolean readyToAccept = true;
-    public boolean readyToSend = false;
+    public volatile Queue<Task> queue = new ArrayDeque<>();
+    public synchronized int getQueueSize() {
+        return queue.size();
+    }
 
-    public FrontSystem() {}
-
-    public synchronized void addTask(Task newTask){
-        readyToAccept = false;
-        deque.addLast(newTask);
-        readyToAccept = true;
-        readyToSend = true;
+    // Adding task into the queue
+    public synchronized void setTask(Task task) throws InterruptedException {
+        while (queue.size() == 2) wait();
+        queue.offer(task);
         notifyAll();
     }
 
-    public synchronized Task popTask(){
-        if (deque.size() > 0) {
-            try {
-                return deque.pollFirst();
-            } finally {
-                if (deque.size() == 0) {
-                    readyToSend = false;
-                }
-            }
+    // Adding task into the queue
+    public synchronized Task getTask() {
+        try {
+            return queue.poll();
+        } finally {
+            notifyAll();
         }
-        return null;
     }
 }

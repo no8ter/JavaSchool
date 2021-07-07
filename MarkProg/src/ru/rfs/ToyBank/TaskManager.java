@@ -1,36 +1,37 @@
 package ru.rfs.ToyBank;
 
-public class TaskManager extends Thread{
+public class TaskManager implements Runnable{
+    private final Bank bankConnection;
+    private Task task;
+    private final FrontSystem fs;
 
-    FrontSystem fs;
-    Task task;
-    Bank bank;
-
-    public TaskManager(FrontSystem fs, Bank bank) {
+    public TaskManager(Bank bankConnection, FrontSystem fs) {
+        this.bankConnection = bankConnection;
         this.fs = fs;
-        this.bank = bank;
-        changeName();
     }
 
-    private void changeName(){
-        String[] subStr;
-        subStr = getName().split("-");
-        setName("Обработчик заявок "+subStr[1]);
-    }
-
+    // Only catching task from Front
     @Override
-    public synchronized void run(){
-        while (true) {
-            while (!fs.readyToSend) {
-                try {
-                    this.wait(1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+    public void run(){
+        while (!Thread.currentThread().isInterrupted()) {
+            if (fs.getQueueSize() >= 0) {
+                task = fs.getTask();
+                if (task == null) continue;
+                serveTask();
             }
-            task = fs.popTask();
-            bank.doTransact(task, getName());
-            System.out.println(getName() + ": Получена заявка на обработку по клиенту - " + task.threadName);
+        }
+    }
+
+    // Unpacking received task and choose action
+    private void serveTask() {
+        System.out.println(Thread.currentThread().getName()+": "+task);
+        switch (task.task) {
+            case CREDIT:
+                bankConnection.restoreMoney(task.moneyCount);
+                break;
+            case REPAYMENT:
+                bankConnection.depositMoney(task.moneyCount);
+                break;
         }
     }
 }
